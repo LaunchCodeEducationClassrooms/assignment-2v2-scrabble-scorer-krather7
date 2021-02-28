@@ -1,7 +1,5 @@
-// inspired by https://exercism.io/tracks/javascript/exercises/etl/solutions/91f99a3cca9548cebe5975d7ebca6a85
-
 const input = require("readline-sync");
-newScore=0
+
 const oldPointStructure = {
   1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
   2: ['D', 'G'],
@@ -21,6 +19,7 @@ let vowelPointStructure = {
   3: ['A', 'E', 'I', 'O', 'U', 'Y'],
 };
 
+
 function oldScrabbleScorer(word) {
 	word = word.toUpperCase();
 	let letterPoints = "";
@@ -31,7 +30,6 @@ function oldScrabbleScorer(word) {
  
 		 if (oldPointStructure[pointValue].includes(word[i])) {
 			letterPoints += `Points for '${word[i]}': ${pointValue}\n`
-            newScore+=parseInt(pointValue)
 		 }
  
 	  }
@@ -44,8 +42,7 @@ function oldScrabbleScorer(word) {
 
 function initialPrompt() {
    console.log("Let's play some scrabble!");
-   const input = require('readline-sync');
-   word = input.question("Enter a word: ");
+   word=input.question("Enter a word to score: ");
 };
 
 let simpleScore=function simpleScore(word) {
@@ -58,7 +55,6 @@ let simpleScore=function simpleScore(word) {
  
 		 if (simplePointStructure[pointValue].includes(word[i])) {
 			letterPoints += `Points for '${word[i]}': ${pointValue}\n`
-                  newScore+=parseInt(pointValue)
 		 }
  
 	  }
@@ -76,7 +72,6 @@ let vowelBonusScore=function vowelBonusScore(word) {
  
 		 if (vowelPointStructure[pointValue].includes(word[i])) {
 			letterPoints += `Points for '${word[i]}': ${pointValue}\n`
-                  newScore+=parseInt(pointValue)
 		 }
  
 	  }
@@ -84,17 +79,19 @@ let vowelBonusScore=function vowelBonusScore(word) {
 	return letterPoints;
  };
 
-let scrabbleScore=function ScrabbleScore(word) {
-  	word = word.toLowerCase();
-for (var i = 0; i < word.length; i++) {
-  pointCheck=word.charAt(i);
-for (key in newPointStructure){
-  if (pointCheck===key){
-  newScore=newScore+parseInt((newPointStructure[pointCheck]))
-  }
-}
-}
-}
+
+
+let scrabbleScore=function scrabbleScore(word) {
+	word = word.toLowerCase();
+	let letterPoints = "";
+ 
+	for (let i = 0; i < word.length; i++) {
+		 if (word.charAt(i)) {
+			letterPoints += `Points for '${word[i]}': ${newPointStructure[word.charAt(i)]}  \n`
+		 }
+	}
+	return letterPoints;
+ };
 
 const scoringAlgorithms = [
   {
@@ -117,18 +114,19 @@ const scoringAlgorithms = [
 ];
 
 function scorerPrompt() {
-  console.log("Which scoring algorithm would you like to use?")
+    console.log("Which scoring algorithm would you like to use?")
       for (i=0;i<scoringAlgorithms.length;i++)
       {
 console.log(i+" - "+scoringAlgorithms[i].name+ ": " +scoringAlgorithms[i].description);
       }
-   const input = require('readline-sync');
-   userInput=input.question("Enter 0, 1, or 2: ");
-
+      userInput=input.question("Enter 0, 1, or 2: ");
+      console.log(scoringAlgorithms[userInput].scorerFunction(word))
 }
 
-function transform() {
-  for (items in oldPointStructure[1]){
+newPointStructure={}
+
+function transform(oldPointStructure) {
+for (items in oldPointStructure[1]){
   newPointStructure[oldPointStructure[1][items].toLowerCase()] = "1"
 }
 for (items in oldPointStructure[2]){
@@ -149,21 +147,16 @@ for (items in oldPointStructure[8]){
 for (items in oldPointStructure[10]){
   newPointStructure[oldPointStructure[10][items].toLowerCase()] = "10"
 }
+   return newPointStructure
 };
 
-let newPointStructure={};
+newPointStructure=transform(oldPointStructure)
 
 function runProgram() {
-  
    initialPrompt();
    scorerPrompt();
-scoringAlgorithms[userInput].scorerFunction(word);
-console.log("Score for " + word + ": " + newScore)
+
 }
-
-transform(newPointStructure)
-
-
 
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
@@ -179,4 +172,3 @@ module.exports = {
 	runProgram: runProgram,
 	scorerPrompt: scorerPrompt
 };
-
